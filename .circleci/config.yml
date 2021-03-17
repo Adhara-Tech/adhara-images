@@ -1,0 +1,44 @@
+version: 2
+jobs:
+  build:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run:
+          name: Login to dockerhub
+          command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run:
+          name: Building all artifacts
+          command: make build_all
+
+  publish:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run:
+          # Docker and Quay.io Login is necessay to pull private images used in tests
+          name: Login to dockerhub
+          command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run:
+          name: Building all artifacts
+          command: make build_all
+      - run:
+          name: Publishing to docker hub
+          command: make publish_all
+
+workflows:
+  version: 2
+  main-workflow:
+    jobs:
+      - build:
+          context: adhara-tech
+      - publish:
+          context: adhara-tech
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master

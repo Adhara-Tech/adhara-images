@@ -1,0 +1,17 @@
+# Build
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDEs
+.idea/
+*.iml
+
+# MACOS
+.DS_STORE
+
+# Node 
+node_modules/
+
+# Vim
+*.swp
