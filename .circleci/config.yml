@@ -33,9 +33,9 @@ workflows:
   main-workflow:
     jobs:
       - build:
-          context: adhara-tech
+          context: adharatech-global
       - publish:
-          context: adhara-tech
+          context: adharatech-global
           requires:
             - build
           filters:
