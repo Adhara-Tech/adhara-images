@@ -6,12 +6,13 @@ endif
 check_version_bump: check_input
 	scripts/checkProjectVersionBumped.sh ${PROJECT}
 
-build: check_version_bump	
-	FULL_IMAGE_NAME := $(shell  cat ${PROJECT}/FULL_IMAGE_NAME)
+full_image_name:
+	$(eval FULL_IMAGE_NAME = $(shell cat ${PROJECT}/FULL_IMAGE_NAME))
+
+build: check_version_bump full_image_name
 	cd ${PROJECT}; docker build -t ${FULL_IMAGE_NAME} .
 
-publish: build
-	FULL_IMAGE_NAME := $(shell  cat ${PROJECT}/FULL_IMAGE_NAME)
+publish: build full_image_name
 	docker push ${FULL_IMAGE_NAME}
 
 build_all:
