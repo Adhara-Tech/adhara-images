@@ -3,7 +3,6 @@
 set -e
 
 PROJECT=$1
-
 rootFolder=$(git rev-parse --show-toplevel)
 versionBumped=$(${rootFolder}/scripts/getModifiedFiles.sh | grep $PROJECT/FULL_IMAGE_NAME)
 

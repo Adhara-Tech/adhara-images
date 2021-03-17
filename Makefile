@@ -1,5 +1,3 @@
-FULL_IMAGE_NAME := $(shell  cat ${PROJECT}/FULL_IMAGE_NAME)
-
 check_input:
 ifndef PROJECT
 	$(error PROJECT env var must be set)
@@ -8,10 +6,12 @@ endif
 check_version_bump: check_input
 	scripts/checkProjectVersionBumped.sh ${PROJECT}
 
-build: check_version_bump
+build: check_version_bump	
+	FULL_IMAGE_NAME := $(shell  cat ${PROJECT}/FULL_IMAGE_NAME)
 	cd ${PROJECT}; docker build -t ${FULL_IMAGE_NAME} .
 
 publish: build
+	FULL_IMAGE_NAME := $(shell  cat ${PROJECT}/FULL_IMAGE_NAME)
 	docker push ${FULL_IMAGE_NAME}
 
 build_all:
