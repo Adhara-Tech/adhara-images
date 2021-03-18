@@ -11,7 +11,7 @@ help() {
 	
 	Usage:
 		RESTIC_REPOSITORY and RESTIC_PASSWORD environment variables are required. 
-		restic.sh <backup|restore> --path <absolute_path> --remove-snapshots --snapshots-to-keep=4
+		resticw.sh <backup|restore> --path <absolute_path> --remove-snapshots --snapshots-to-keep=4
 			-p | --path backup directory
 			-d | --delete-snapshots if you want to delete old snapshots ( default false ) 
 			-k | --snapshots-to-keep num of snapshots to keep ( default 2 ) 
