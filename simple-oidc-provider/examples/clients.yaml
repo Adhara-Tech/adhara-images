@@ -1,0 +1,12 @@
+clients:
+  - client_id: ******************
+    client_secret: ****************
+    redirect_uris:
+      - http://localhost:4180/oauth2/callback
+    post_logout_redirect_uris:
+      - http://localhost:4180
+    response_types:
+      - code
+    application_type: web
+    grant_types:
+    - authorization_code
