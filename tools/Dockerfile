@@ -1,4 +1,4 @@
 FROM alpine:3.13
 
-RUN apk update && \
-		apk add curl jq bind-tools
+RUN apk --update add --no-cache \
+            curl jq bind-tools bash yq gettext
