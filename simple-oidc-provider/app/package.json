@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "ejs": "^2.6.2",
+    "ejs": "^2.7.4",
     "express": "^4.17.1",
     "express-urlrewrite": "^1.2.0",
     "ioredis": "^4.10.0",

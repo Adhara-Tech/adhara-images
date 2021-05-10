@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Provider = require('oidc-provider');
 const Account = require('./account');
+const ConfigProcessor = require('./config')
 const fs = require('fs');
 const yaml = require('js-yaml');
 
@@ -13,7 +14,8 @@ assert(process.env.CLIENTS_CONFIG_FILE, 'process.env.CLIENTS_CONFIG_FILE missing
 assert(process.env.JWKS_FILE, 'process.env.JWKS_FILE missing');
 
 const fileContents = fs.readFileSync(process.env.CLIENTS_CONFIG_FILE, 'utf8');
-const config = yaml.safeLoad(fileContents);
+let rawConfig = yaml.safeLoad(fileContents);
+const config = ConfigProcessor.evalConfigStrings(rawConfig)
 const jwks = require(process.env.JWKS_FILE);
 
 const oidc = new Provider(process.env.PROVIDER_URL, {
