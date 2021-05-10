@@ -3,12 +3,14 @@ const Memory = require('lowdb/adapters/Memory');
 const assert = require('assert');
 const fs = require('fs');
 const yaml = require('js-yaml');
+const ConfigProcessor = require('./config')
 
 assert(process.env.USERS_CONFIG_FILE, 'process.env.USERS_CONFIG_FILE missing');
 
 const db = low(new Memory());
 const fileContents = fs.readFileSync(process.env.USERS_CONFIG_FILE, 'utf8');
-const config = yaml.safeLoad(fileContents);
+let rawConfig = yaml.safeLoad(fileContents);
+const config = ConfigProcessor.evalConfigStrings(rawConfig)
 
 db.defaults({
   users: config.users

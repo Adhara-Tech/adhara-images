@@ -2,7 +2,10 @@
 
 A node implementation of [oidc provider](https://github.com/panva/node-oidc-provider)
 
-# Configuration
+> ### Do not run this in production
+> This simple OIDC provider is intended for testing purposes only
+
+## Configuration
 
 1. Execute `npm install` to install node dependencies
 
@@ -47,4 +50,15 @@ clients:
   * `USERS_CONFIG_FILE` -> Path to users config file
   * `JWKS_FILE` -> Path to jwks keys file.
 
-## Do not run this in production
+
+### Templating
+
+You can use [EJS](https://ejs.co/) templates in the string values of clients and users config files. Example:
+
+```yaml
+clients:
+  - client_id: "<%= env.CLIENT_ID; %>"
+    client_secret: "<%= env.CLIENT_SECRET; %>"
+
+    . . .
+```
