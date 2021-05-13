@@ -123,7 +123,7 @@ expressApp.post('/interaction/:uid/login', setNoCache, parse, async (req, res, n
   }
 });
 
-
+oidc.proxy = true;
 expressApp.use(oidc.callback);
 
 // express listen
