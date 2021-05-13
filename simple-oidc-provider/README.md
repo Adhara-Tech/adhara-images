@@ -7,7 +7,7 @@ A node implementation of [oidc provider](https://github.com/panva/node-oidc-prov
 
 ## Configuration
 
-1. Execute `npm install` to install node dependencies
+1. Execute `npm install` to install node dependencies.
 
 2. Specify a list of users in a users.yaml file.
 
