@@ -9,9 +9,7 @@ check_version_bump: check_input
 full_image_name:
 	$(eval FULL_IMAGE_NAME = $(shell cat ${PROJECT}/FULL_IMAGE_NAME))
 
-# TODO revert this change once simple-oidc-provider:0.1.1 is published
-#build: check_version_bump full_image_name
-build: full_image_name
+build: check_version_bump full_image_name
 	cd ${PROJECT}; docker build -t ${FULL_IMAGE_NAME} .
 
 publish: build full_image_name
