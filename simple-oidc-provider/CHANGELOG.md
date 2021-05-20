@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+### Fixed
+
+- Fix missing path from **PROVIDER_URL** in login form action
+
 ## 0.1.2
 
 ### Added
