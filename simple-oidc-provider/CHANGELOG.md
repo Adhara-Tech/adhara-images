@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4-rc1
+
+### Fixed
+
+- Fixed bugs introduced in 0.1.2->0.1.3: broken login page (`contextPath is not defined` error)
+
 ## 0.1.3
 
 ### Fixed
