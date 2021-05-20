@@ -79,6 +79,7 @@ expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, n
         params,
         title: 'Sign-in',
         flash: undefined,
+        contextPath: contextPath,
       });
     }
 
@@ -110,7 +111,7 @@ expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, asyn
         },
         title: 'Sign-in',
         flash: 'Invalid email or password.',
-	contextPath: contextPath,
+        contextPath: contextPath,
       });
       return;
     }
