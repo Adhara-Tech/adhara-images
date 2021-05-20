@@ -1,6 +1,6 @@
 clients:
-  - client_id: ******************
-    client_secret: ****************
+  - client_id: changeme
+    client_secret: changeme
     redirect_uris:
       - http://localhost:4180/oauth2/callback
     post_logout_redirect_uris:

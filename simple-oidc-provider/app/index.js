@@ -7,6 +7,7 @@ const Account = require('./account');
 const ConfigProcessor = require('./config')
 const fs = require('fs');
 const yaml = require('js-yaml');
+const url  = require('url');
 
 assert(process.env.PROVIDER_URL, 'process.env.PROVIDER_URL missing');
 assert(process.env.PORT, 'process.env.PORT missing');
@@ -18,6 +19,8 @@ let rawConfig = yaml.safeLoad(fileContents);
 const config = ConfigProcessor.evalConfigStrings(rawConfig)
 const jwks = require(process.env.JWKS_FILE);
 
+const contextPath = url.parse(process.env.PROVIDER_URL).pathname
+
 const oidc = new Provider(process.env.PROVIDER_URL, {
   clients: config.clients,
   jwks,
@@ -28,7 +31,7 @@ const oidc = new Provider(process.env.PROVIDER_URL, {
   },
   interactions: {
     url(ctx) {
-      return `/interaction/${ctx.oidc.uid}`;
+      return `${contextPath}/interaction/${ctx.oidc.uid}`;
     },
   },
   features: {
@@ -60,7 +63,7 @@ function setNoCache(req, res, next) {
   next();
 }
 
-expressApp.get('/interaction/:uid', setNoCache, async (req, res, next) => {
+expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, next) => {
   try {
     const details = await oidc.interactionDetails(req, res);
     //console.log('see what else is available to you for interaction views', details);
@@ -89,7 +92,7 @@ expressApp.get('/interaction/:uid', setNoCache, async (req, res, next) => {
   }
 });
 
-expressApp.post('/interaction/:uid/login', setNoCache, parse, async (req, res, next) => {
+expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, async (req, res, next) => {
   try {
     const { uid, prompt, params } = await oidc.interactionDetails(req, res);
     const client = await oidc.Client.find(params.client_id);
@@ -124,7 +127,7 @@ expressApp.post('/interaction/:uid/login', setNoCache, parse, async (req, res, n
 });
 
 oidc.proxy = true;
-expressApp.use(oidc.callback);
+expressApp.use(contextPath, oidc.callback);
 
 // express listen
 expressApp.listen(process.env.PORT);
