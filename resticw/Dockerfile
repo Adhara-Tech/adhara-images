@@ -1,6 +1,6 @@
-FROM restic/restic:0.12.0
+FROM adharatech/tools:0.0.2
 
-RUN apk --update add --no-cache bash
+RUN apk --update add --no-cache restic
 
 WORKDIR restic
 
