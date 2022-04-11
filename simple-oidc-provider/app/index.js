@@ -4,20 +4,21 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Provider = require('oidc-provider');
 const FileBasedAccount = require('./lib/file_based_accounts');
+const WildcardPasswordAccount = require('./lib/wildcard_accounts');
 const ConfigProcessor = require('./config')
 const fs = require('fs');
 const yaml = require('js-yaml');
 const url  = require('url');
+const accountManagerFactory = require('./account_manager_factory')
 
 assert(process.env.PROVIDER_URL, 'process.env.PROVIDER_URL missing');
 assert(process.env.PORT, 'process.env.PORT missing');
 assert(process.env.CLIENTS_CONFIG_FILE, 'process.env.CLIENTS_CONFIG_FILE missing');
 assert(process.env.JWKS_FILE, 'process.env.JWKS_FILE missing');
-assert(process.env.USERS_CONFIG_FILE, 'process.env.USERS_CONFIG_FILE missing');
 
-const usersConfigFile = process.env.USERS_CONFIG_FILE
+const accountManager = accountManagerFactory.getAccountManager()
 
-const accountManager = new FileBasedAccount(usersConfigFile)
+assert(accountManager, "Cannot initialise user accounts");
 
 const fileContents = fs.readFileSync(process.env.CLIENTS_CONFIG_FILE, 'utf8');
 let rawConfig = yaml.safeLoad(fileContents);
@@ -98,6 +99,7 @@ expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, n
 
     await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: true });
   } catch (err) {
+    console.log(err)
     next(err);
   }
 });
@@ -134,6 +136,7 @@ expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, asyn
 
     await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: false });
   } catch (err) {
+    console.log(err)
     next(err);
   }
 });

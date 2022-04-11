@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0-rc3 - 2022-04-12
+
+### Added
+- Added a new environment variable called `USERS_WILDCARD_PASSWORD` to accept any login email as long as the password is correct. If `USERS_CONFIG_FILE` environment variable is present the file-based users credentials take precedence over the wildcard password method.
+
 ## 0.2.0-rc2
 
 ### Fixed
