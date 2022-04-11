@@ -5,5 +5,5 @@ revision=''
 if [[ "$BRANCH" == "master" ]]; then
   revision='~1'
 fi
-ignorechanges='scripts\|\.circleci\|Makefile\|\.gitignore\|README.md\|CODEOWNERS'
+ignorechanges='scripts\|\.circleci\|\.github\|Makefile\|\.gitignore\|README.md\|CODEOWNERS'
 git diff origin/master${revision}...HEAD --name-only --diff-filter=d | sort -u | grep -v -e ${ignorechanges} | uniq
