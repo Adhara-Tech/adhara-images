@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0-rc1
+
+### Enhancements
+- minor refactor for code organisation
+
+### Fixed
+- Fixed issues with login screen: use absolute URLs in forms
+
+
 ## 0.1.4, 0.1.4-rc1
 
 ### Fixed
