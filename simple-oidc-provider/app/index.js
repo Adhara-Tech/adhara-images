@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const Provider = require('oidc-provider');
-const Account = require('./account');
+const FileBasedAccount = require('./lib/file_based_accounts');
 const ConfigProcessor = require('./config')
 const fs = require('fs');
 const yaml = require('js-yaml');
@@ -13,25 +13,31 @@ assert(process.env.PROVIDER_URL, 'process.env.PROVIDER_URL missing');
 assert(process.env.PORT, 'process.env.PORT missing');
 assert(process.env.CLIENTS_CONFIG_FILE, 'process.env.CLIENTS_CONFIG_FILE missing');
 assert(process.env.JWKS_FILE, 'process.env.JWKS_FILE missing');
+assert(process.env.USERS_CONFIG_FILE, 'process.env.USERS_CONFIG_FILE missing');
+
+const usersConfigFile = process.env.USERS_CONFIG_FILE
+
+const accountManager = new FileBasedAccount(usersConfigFile)
 
 const fileContents = fs.readFileSync(process.env.CLIENTS_CONFIG_FILE, 'utf8');
 let rawConfig = yaml.safeLoad(fileContents);
 const config = ConfigProcessor.evalConfigStrings(rawConfig)
 const jwks = require(process.env.JWKS_FILE);
 
-const contextPath = url.parse(process.env.PROVIDER_URL).pathname
+const providerUrl = process.env.PROVIDER_URL
+const contextPath = url.parse(providerUrl).pathname
 
 const oidc = new Provider(process.env.PROVIDER_URL, {
   clients: config.clients,
   jwks,
-  findAccount: Account.findAccount,
+  findAccount: accountManager.findAccount,
   claims: {
     openid: ['sub', 'email'],
     email: ['email']
   },
   interactions: {
     url(ctx) {
-      return `${contextPath}/interaction/${ctx.oidc.uid}`;
+      return `${providerUrl}/interaction/${ctx.oidc.uid}`;
     },
   },
   features: {
@@ -80,6 +86,7 @@ expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, n
         title: 'Sign-in',
         flash: undefined,
         contextPath: contextPath,
+        providerUrl: providerUrl,
       });
     }
 
@@ -98,7 +105,7 @@ expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, asyn
     const { uid, prompt, params } = await oidc.interactionDetails(req, res);
     const client = await oidc.Client.find(params.client_id);
 
-    const accountId = await Account.authenticate(req.body.email, req.body.password);
+    const accountId = await accountManager.authenticate(req.body.email, req.body.password);
 
     if (!accountId) {
       res.render('login', {
@@ -112,6 +119,7 @@ expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, asyn
         title: 'Sign-in',
         flash: 'Invalid email or password.',
         contextPath: contextPath,
+        providerUrl: providerUrl,
       });
       return;
     }
