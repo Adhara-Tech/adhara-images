@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0-rc4 - 2022-04-12
+
+### Fixed
+- Fixed double slash URLs when PROVIDER_URL ends with a trailing slash
+
 ## 0.2.0-rc3 - 2022-04-12
 
 ### Added
