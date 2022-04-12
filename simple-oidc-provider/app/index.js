@@ -28,7 +28,7 @@ const jwks = require(process.env.JWKS_FILE);
 const providerUrl = process.env.PROVIDER_URL
 const contextPath = url.parse(providerUrl).pathname
 
-const oidc = new Provider(process.env.PROVIDER_URL, {
+const oidc = new Provider(providerUrl, {
   clients: config.clients,
   jwks,
   findAccount: async (ctx, id) => {
@@ -40,7 +40,7 @@ const oidc = new Provider(process.env.PROVIDER_URL, {
   },
   interactions: {
     url(ctx) {
-      return `${providerUrl}/interaction/${ctx.oidc.uid}`;
+      return path.join(contextPath, "/interaction/", ctx.oidc.uid);
     },
   },
   features: {
@@ -72,7 +72,7 @@ function setNoCache(req, res, next) {
   next();
 }
 
-expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, next) => {
+expressApp.get(path.join(contextPath, "/interaction/:uid"), setNoCache, async (req, res, next) => {
   try {
     const details = await oidc.interactionDetails(req, res);
     //console.log('see what else is available to you for interaction views', details);
@@ -89,7 +89,6 @@ expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, n
         title: 'Sign-in',
         flash: undefined,
         contextPath: contextPath,
-        providerUrl: providerUrl,
       });
     }
 
@@ -104,7 +103,7 @@ expressApp.get(`${contextPath}/interaction/:uid`, setNoCache, async (req, res, n
   }
 });
 
-expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, async (req, res, next) => {
+expressApp.post(path.join(contextPath, "/interaction/:uid/login"), setNoCache, parse, async (req, res, next) => {
   try {
     const { uid, prompt, params } = await oidc.interactionDetails(req, res);
     const client = await oidc.Client.find(params.client_id);
@@ -123,7 +122,6 @@ expressApp.post(`${contextPath}/interaction/:uid/login`, setNoCache, parse, asyn
         title: 'Sign-in',
         flash: 'Invalid email or password.',
         contextPath: contextPath,
-        providerUrl: providerUrl,
       });
       return;
     }
