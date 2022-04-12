@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0-rc2
+
+### Fixed
+- Regression bug caused by unbound context calling class function
+
 ## 0.2.0-rc1
 
 ### Enhancements

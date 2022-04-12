@@ -30,7 +30,9 @@ const contextPath = url.parse(providerUrl).pathname
 const oidc = new Provider(process.env.PROVIDER_URL, {
   clients: config.clients,
   jwks,
-  findAccount: accountManager.findAccount,
+  findAccount: async (ctx, id) => {
+    return accountManager.findAccount(ctx, id)
+  },
   claims: {
     openid: ['sub', 'email'],
     email: ['email']
