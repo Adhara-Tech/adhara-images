@@ -1,5 +1,21 @@
 # Changelog
 
+
+## 0.2.0 - 2022-05-31
+
+### Fixed
+- Fixed double slash URLs when `PROVIDER_URL` ends with a trailing slash
+- Regression bug caused by unbound context calling class function
+- Fixed issues with login screen: use absolute URLs in forms
+
+### Added
+- Added a new environment variable called `USERS_WILDCARD_PASSWORD` to accept any login email as long as the password is correct. If `USERS_CONFIG_FILE` environment variable is present the file-based users credentials take precedence over the wildcard password method.
+
+
+### Enhancements
+- minor refactor for code organisation
+
+
 ## 0.2.0-rc4 - 2022-04-12
 
 ### Fixed
